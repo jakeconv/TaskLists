@@ -1,0 +1,20 @@
+# CodeWarrior build output
+Debug/
+Release/
+TaskLists_Data/Debug/
+TaskLists_Data/Release/
+*.prc
+*.psym
+*.MAP
+*.ro
+
+# Leftovers from before the project was renamed
+DailyChecklist_Data/
+readme.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# Scratch
+.claude/

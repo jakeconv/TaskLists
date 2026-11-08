@@ -1,0 +1,178 @@
+// tasklists.rcp - PilRC resources for Task Lists (daily / weekly / monthly), Palm OS 3.0+
+
+#include "tasklists_res.h"
+
+APPLICATIONICONNAME ID 1000 "Task Lists"
+VERSION ID 1 "2.0"
+
+// Launcher icons: low density (72) and double density (144), each in
+// 1-bit, 2-bit gray and 8-bit colour.  (If an older PilRC rejects
+// ICONFAMILYEX, use the ICONFAMILY / SMALLICONFAMILY lines in the comment
+// below instead.)
+//   ICONFAMILY "icon22.bmp" "icon22_gray.bmp" "" "icon22_color.bmp"
+//   SMALLICONFAMILY "icon15x9.bmp" "icon15x9_gray.bmp" "" "icon15x9_color.bmp"
+ICONFAMILYEX
+BEGIN
+  BITMAP "icon22.bmp"       BPP 1 DENSITY 72
+  BITMAP "icon22_gray.bmp"  BPP 2 DENSITY 72
+  BITMAP "icon22_color.bmp" BPP 8 DENSITY 72
+  BITMAP "icon44.bmp"       BPP 1 DENSITY 144
+  BITMAP "icon44_gray.bmp"  BPP 2 DENSITY 144
+  BITMAP "icon44_color.bmp" BPP 8 DENSITY 144
+END
+
+SMALLICONFAMILYEX
+BEGIN
+  BITMAP "icon15x9.bmp"       BPP 1 DENSITY 72
+  BITMAP "icon15x9_gray.bmp"  BPP 2 DENSITY 72
+  BITMAP "icon15x9_color.bmp" BPP 8 DENSITY 72
+  BITMAP "icon30x18.bmp"       BPP 1 DENSITY 144
+  BITMAP "icon30x18_gray.bmp"  BPP 2 DENSITY 144
+  BITMAP "icon30x18_color.bmp" BPP 8 DENSITY 144
+END
+
+// order: 1-bit, 2-bit gray, 4-bit gray, 8-bit colour (empty = not provided)
+BITMAPFAMILY ID JakesoftLogoBitmap "jakesoft.bmp" "" "" "jakesoft_color.bmp"
+
+// ---------------------------------------------------------------
+// Main form: list tabs, scrolling checklist, "n/m done" count
+// ---------------------------------------------------------------
+FORM ID MainForm AT (0 0 160 160)
+USABLE
+MENUID MainMenu
+BEGIN
+  TITLE "Task Lists"
+  PUSHBUTTON "Daily"   ID MainTabDaily   AT (2 16 50 12) USABLE GROUP MainTabGroup
+  PUSHBUTTON "Weekly"  ID MainTabWeekly  AT (54 16 50 12) USABLE GROUP MainTabGroup
+  PUSHBUTTON "Monthly" ID MainTabMonthly AT (106 16 50 12) USABLE GROUP MainTabGroup
+  TABLE ID MainTable AT (0 31 150 110) ROWS 10 COLUMNS 2 COLUMNWIDTHS 16 134
+  SCROLLBAR ID MainScrollBar AT (152 31 7 110) USABLE VALUE 0 MIN 0 MAX 0 PAGESIZE 10
+  BUTTON "New" ID MainNewButton AT (2 145 36 12) USABLE LEFTANCHOR FRAME
+END
+
+// ---------------------------------------------------------------
+// Add / edit dialog (the title is set by the code per list)
+// ---------------------------------------------------------------
+FORM ID EditForm AT (2 76 156 84)
+MODAL
+SAVEBEHIND
+DEFAULTBTNID EditCancel
+BEGIN
+  TITLE "Task"
+  FIELD ID EditField AT (6 20 144 24) USABLE LEFTALIGN EDITABLE UNDERLINED MULTIPLELINES MAXCHARS 40 AUTOSHIFT
+  SELECTORTRIGGER "Due: Auto" ID EditDue AT (6 48 98 12) USABLE LEFTANCHOR
+  BUTTON "Auto" ID EditDueAuto AT (108 48 30 12) USABLE LEFTANCHOR FRAME
+  BUTTON "OK" ID EditOK AT (6 66 30 12) USABLE LEFTANCHOR FRAME
+  BUTTON "Cancel" ID EditCancel AT (40 66 42 12) USABLE LEFTANCHOR FRAME
+  BUTTON "Beam" ID EditBeam AT (86 66 30 12) USABLE LEFTANCHOR FRAME
+  BUTTON "Delete" ID EditDelete AT (120 66 32 12) USABLE LEFTANCHOR FRAME
+END
+
+// ---------------------------------------------------------------
+// First day of the week (weekly tasks reset on this day)
+// ---------------------------------------------------------------
+FORM ID WeekForm AT (2 84 156 74)
+MODAL
+SAVEBEHIND
+DEFAULTBTNID WeekCancel
+BEGIN
+  TITLE "Week Starts On"
+  LABEL "Weekly tasks reset on:" AUTOID AT (6 20)
+  PUSHBUTTON "Su" ID WeekDay0 AT (6 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "Mo" ID WeekDay1 AT (27 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "Tu" ID WeekDay2 AT (48 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "We" ID WeekDay3 AT (69 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "Th" ID WeekDay4 AT (90 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "Fr" ID WeekDay5 AT (111 36 20 14) USABLE GROUP WeekGroup
+  PUSHBUTTON "Sa" ID WeekDay6 AT (132 36 20 14) USABLE GROUP WeekGroup
+  BUTTON "OK" ID WeekOK AT (6 56 36 12) USABLE LEFTANCHOR FRAME
+  BUTTON "Cancel" ID WeekCancel AT (48 56 40 12) USABLE LEFTANCHOR FRAME
+END
+
+// ---------------------------------------------------------------
+// About dialog (Jakesoft logo)
+// ---------------------------------------------------------------
+FORM ID AboutForm AT (2 22 156 136)
+MODAL
+SAVEBEHIND
+DEFAULTBTNID AboutOK
+BEGIN
+  TITLE "About"
+  FORMBITMAP AT (10 19) BITMAP JakesoftLogoBitmap
+  LABEL "Task Lists" AUTOID AT (10 75) FONT 1
+  LABEL "Version 2.0" AUTOID AT (10 89)
+  LABEL "A tracker for recurring tasks" AUTOID AT (10 101)
+  BUTTON "OK" ID AboutOK AT (60 118 36 12) USABLE LEFTANCHOR FRAME
+END
+
+// ---------------------------------------------------------------
+// Menu
+// ---------------------------------------------------------------
+MENU ID MainMenu
+BEGIN
+  PULLDOWN "Item"
+  BEGIN
+    MENUITEM "New Item" ID MenuNew "N"
+    MENUITEM "Uncheck All" ID MenuUncheckAll "U"
+    MENUITEM "Beam List" ID MenuBeamList "B"
+  END
+  PULLDOWN "Options"
+  BEGIN
+    MENUITEM "Week Starts On..." ID MenuWeekStart "W"
+  END
+  PULLDOWN "Help"
+  BEGIN
+    MENUITEM "About" ID MenuAbout "A"
+  END
+END
+
+// ---------------------------------------------------------------
+// Alerts
+// ---------------------------------------------------------------
+ALERT ID DeleteAlert
+CONFIRMATION
+BEGIN
+  TITLE "Delete item?"
+  MESSAGE "This removes the item from its list."
+  BUTTONS "Delete" "Cancel"
+END
+
+ALERT ID FullAlert
+INFORMATION
+BEGIN
+  TITLE "List Full"
+  MESSAGE "This list already has 200 items."
+  BUTTONS "OK"
+END
+
+ALERT ID BeamFailAlert
+ERROR
+BEGIN
+  TITLE "Beam Failed"
+  MESSAGE "The item could not be beamed."
+  BUTTONS "OK"
+END
+
+ALERT ID NoBeamAlert
+ERROR
+BEGIN
+  TITLE "Cannot Beam"
+  MESSAGE "This device does not support beaming."
+  BUTTONS "OK"
+END
+
+ALERT ID RomIncompatibleAlert
+ERROR
+BEGIN
+  TITLE "System Incompatible"
+  MESSAGE "Task Lists needs Palm OS 3.0 or later."
+  BUTTONS "OK"
+END
+
+ALERT ID DatabaseErrorAlert
+ERROR
+BEGIN
+  TITLE "Database Error"
+  MESSAGE "Could not open or create the checklist database."
+  BUTTONS "OK"
+END
