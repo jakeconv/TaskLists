@@ -79,5 +79,4 @@ app running and not running), and the layout on the monochrome Visor.
 
 ## License
 
-No license has been chosen yet, so all rights are reserved by default. Add a `LICENSE` file before accepting
-contributions or expecting others to reuse the code.
+Released under the [MIT License](LICENSE).
