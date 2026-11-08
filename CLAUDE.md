@@ -78,8 +78,8 @@ NUL-terminated texts. Received items are added unchecked, to the list of the bea
 whole payload before anything is stored. `ReceiveBeam()` and `RegisterBeaming()` run from launch codes without
 globals, so they and their helpers use **no globals and no string literals** (the database is created there by
 `CreateDatabase()` with the name built character by character, so beams work even before the app was first run).
-Beaming is registered at launch, sync-notify and reset. **Not yet tested on real devices**, nor the trap-based
-`BeamAvailable()` check for Palm OS 3.1 ROMs.
+Beaming is registered at launch, sync-notify and reset. Confirmed working between a Visor (so the trap-based
+`BeamAvailable()` check passes on that ROM) and a TX.
 
 ## Resource IDs (`tasklists_res.h`)
 
@@ -98,10 +98,13 @@ OK 1510, Cancel 1511. App icon `tAIB` 1000 / 1001.
 
 ## Status
 
-- Version 1 (daily only) was built and run by the user. Version 2 (this design) has **not been built yet**: only the
-  .rcp was verified with PilRC 3.1 and symbol names checked against the SDK headers.
-- Still to check on devices: beaming both ways (app running / not running), the Visor's monochrome layout (tabs row,
-  10-row table, "Due 11/15" text width), weekly rollover on the chosen day, double-density and 2-bit icons.
+- Builds without errors and **runs on the user's Handspring Visor and Palm TX; beaming works** (confirmed by the user).
+  Custom due dates and the "..." truncation were also confirmed working.
+- Gotcha: beaming failed at first because the **creator ID in the CodeWarrior project settings** was wrong (same
+  problem as the Checklists project). It must be `JsDL`; the receiving device finds the app through it. The fix is
+  stored in the binary `TaskLists.mcp` / `TaskLists_Data\CWSettingsWindows.stg`, so keep those in the repo.
+- Not specifically confirmed: weekly rollover on a changed week-start day, beaming when the app was never run
+  on the receiving device, the icons at every depth/density.
 - The edit form triggers a PilRC warning about a missing Graffiti State Indicator (harmless).
 
 ## Ideas for next steps
